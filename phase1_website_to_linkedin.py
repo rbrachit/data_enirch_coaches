@@ -6,6 +6,8 @@ Phase 1: Scrape coach websites via Apify cheerio-scraper to extract LinkedIn URL
 """
 
 import csv, json, time, re, os, shutil, tempfile
+from dotenv import load_dotenv
+load_dotenv()
 import requests
 
 APIFY_TOKEN  = os.environ.get('APIFY_TOKEN', '')  # set via: export APIFY_TOKEN=your_key

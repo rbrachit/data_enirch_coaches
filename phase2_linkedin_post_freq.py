@@ -9,7 +9,9 @@ Phase 2: Scrape LinkedIn profiles via Apify to get original post frequency.
 Run: python3 phase2_linkedin_post_freq.py
 """
 
-import csv, json, time, re, shutil
+import csv, json, time, re, os, shutil
+from dotenv import load_dotenv
+load_dotenv()
 from datetime import datetime, timedelta, timezone
 import requests
 
