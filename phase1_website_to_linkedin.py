@@ -31,6 +31,7 @@ async function pageFunction(context) {
 
     const results = [...found];
     return {
+        originalUrl: context.request.userData.originalUrl,
         sourceUrl: window.location.href,
         linkedinUrl: results.length > 0 ? results[0] : null,
         allLinkedinUrls: results
@@ -40,7 +41,7 @@ async function pageFunction(context) {
 
 def run_apify_batch(urls: list[str]) -> dict[str, str]:
     """Submit a batch of URLs to Apify, wait for completion, return {url: linkedin_url}."""
-    start_urls = [{"url": u} for u in urls]
+    start_urls = [{"url": u, "userData": {"originalUrl": u}} for u in urls]
     payload = {
         "startUrls": start_urls,
         "pageFunction": PAGE_FUNCTION,
@@ -92,10 +93,10 @@ def run_apify_batch(urls: list[str]) -> dict[str, str]:
     items_r.raise_for_status()
     items = items_r.json()
 
-    # Build map: website_url → linkedin_url
+    # Build map: original_input_url → linkedin_url
     result = {}
     for item in items:
-        src = item.get("sourceUrl") or item.get("url", "")
+        src = item.get("originalUrl") or item.get("sourceUrl") or item.get("url", "")
         li  = item.get("linkedinUrl")
         if src and li:
             result[src.rstrip("/")] = li
